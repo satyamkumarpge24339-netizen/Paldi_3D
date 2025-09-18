@@ -2,48 +2,95 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Property Tax Notice</title>
+<title>Official Property Tax Notice</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #fdecea; margin: 0; padding: 20px; }
-  .notice { background: #fff; border-left: 6px solid #C0392B; border-radius: 10px; padding: 25px; max-width: 500px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-  h2 { text-align: center; color: #C0392B; margin-bottom: 20px; }
-  p { margin: 6px 0; font-size: 14px; }
-  .button { margin-top: 15px; display: inline-block; padding: 10px 15px; background:#C0392B; color:white; border-radius:5px; text-decoration:none; font-weight: bold; text-align:center; }
-  .footer { font-size: 12px; color: #555; margin-top: 20px; text-align: center; }
+    body {
+        font-family: 'Times New Roman', serif;
+        background-color: #fff;
+        margin: 40px;
+        color: #2C3E50;
+        line-height: 1.6;
+    }
+    .letter-container {
+        max-width: 700px;
+        margin: auto;
+        padding: 25px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+    h2 {
+        text-align: center;
+        color: #C0392B;
+        margin-bottom: 20px;
+    }
+    p { margin: 10px 0; }
+    ul { margin-left: 20px; }
+    .footer {
+        margin-top: 40px;
+    }
+    .highlight {
+        font-weight: bold;
+    }
 </style>
 </head>
 <body>
 
-<div class="notice">
-  <h2>⚠️ Property Tax Notice</h2>
-  <p><b>Building ID:</b> <span id="building">-</span></p>
-  <p><b>Total Floor Tax Due:</b> ₹<span id="tax">0</span></p>
-  <p><b>Status:</b> <span id="status">Unpaid</span></p>
+<div class="letter-container">
+    <h2>🏛 Official Property Tax Notice</h2>
 
-  <a class="button" id="emailButton" href="#" target="_blank">✉ Send Email Notice</a>
+    <p><span class="highlight">To:</span> The Property Owner / Authorized Representative</p>
+    <p><span class="highlight">Building ID:</span> <span id="bID"></span></p>
+    <p><span class="highlight">Date:</span> <span id="currentDate"></span></p>
 
-  <div class="footer">This is an auto-generated property tax notice.</div>
+    <p>Dear Sir/Madam,</p>
+
+    <p>This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year <span id="fiscalYear"></span> has <b>not been received in full</b>.</p>
+
+    <p><b>Property Details:</b></p>
+    <ul>
+        <li><b>Owner:</b> <span id="owner"></span></li>
+        <li><b>Property Use:</b> <span id="useType"></span></li>
+        <li><b>Carpet Area:</b> <span id="carpet"></span> sq.m</li>
+    </ul>
+
+    <p><b>Outstanding Amount:</b></p>
+    <ul>
+        <li><b>Total Floor Tax:</b> ₹<span id="totalTax"></span></li>
+    </ul>
+
+    <p><b>Instructions:</b></p>
+    <ul>
+        <li>Kindly remit the outstanding amount at the earliest to avoid additional penalties or legal proceedings.</li>
+        <li>Payment can be made at the Municipal Corporation office or through the official online property tax portal.</li>
+        <li>For any queries, contact the Property Tax Department at <b>official@gov.in</b>.</li>
+    </ul>
+
+    <p>Please treat this matter with urgency. Non-payment may result in further administrative action in accordance with municipal regulations.</p>
+
+    <div class="footer">
+        <p>Sincerely,</p>
+        <p><b>Property Tax Collection Officer</b><br>Municipal Corporation</p>
+    </div>
 </div>
 
 <script>
-// Function to get query parameters from URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param) || "-";
-}
+    // Read URL parameters from Arcade pop-up
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById("bID").innerText = urlParams.get('building') || "N/A";
+    document.getElementById("owner").innerText = urlParams.get('owner') || "N/A";
+    document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
+    document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
+    document.getElementById("totalTax").innerText = urlParams.get('tax') || "0";
 
-// Fill values dynamically
-const building = getQueryParam("building");
-const tax = getQueryParam("tax");
-const status = getQueryParam("status") || "Unpaid";
+    // Current date
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January = 0
+    const yyyy = today.getFullYear();
+    document.getElementById("currentDate").innerText = dd + '/' + mm + '/' + yyyy;
 
-document.getElementById("building").textContent = building;
-document.getElementById("tax").textContent = tax;
-document.getElementById("status").textContent = status;
-
-// Update mailto link dynamically
-const emailLink = "mailto:official@gov.in?subject=Property%20Tax%20Notice%20for%20" + building + "&body=Total%20Floor%20Tax%20Due:%20" + tax + "%20Status:%20" + status;
-document.getElementById("emailButton").href = emailLink;
+    // Fiscal year (optional dynamic, you can replace with logic if needed)
+    document.getElementById("fiscalYear").innerText = yyyy;
 </script>
 
 </body>

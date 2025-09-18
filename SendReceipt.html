@@ -4,45 +4,118 @@
 <meta charset="UTF-8">
 <title>Property Tax Receipt</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-  .receipt { background: #fff; border-radius: 10px; padding: 25px; max-width: 500px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-  h2 { text-align: center; color: #2E86C1; margin-bottom: 20px; }
-  p { margin: 6px 0; font-size: 14px; }
-  .total { color: #C0392B; font-weight: bold; font-size: 16px; }
-  .button { margin-top: 15px; display: inline-block; padding: 10px 15px; background:#2E86C1; color:white; border-radius:5px; text-decoration:none; font-weight: bold; text-align:center; }
-  .footer { font-size: 12px; color: #555; margin-top: 20px; text-align: center; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+    .receipt-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        line-height: 1.6;
+    }
+    h1 {
+        color: #2E86C1;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 28px;
+    }
+    hr {
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 15px 0;
+    }
+    .details b {
+        color: #2C3E50;
+    }
+    .tax-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+    }
+    .total {
+        font-weight: bold;
+        color: #C0392B;
+        font-size: 18px;
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+    }
+    .status {
+        margin-top: 15px;
+    }
+    .status span {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #fff;
+    }
+    .status-paid { background-color: #27AE60; }
+    .status-unpaid { background-color: #C0392B; }
+    .status-partial { background-color: #E67E22; }
+    .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #7f8c8d;
+    }
 </style>
 </head>
 <body>
 
-<div class="receipt">
-  <h2>🏛 Property Tax Receipt</h2>
-  <p><b>Building ID:</b> <span id="building">-</span></p>
-  <p><b>Owner:</b> <span id="owner">-</span></p>
-  <p><b>Use:</b> <span id="use">-</span></p>
-  <p><b>Carpet Area:</b> <span id="carpet">-</span> sq.m</p>
-  <p class="total"><b>Total Floor Tax:</b> ₹<span id="tax">0</span></p>
-  <p><b>Status:</b> <span id="status">Paid</span></p>
-
-  <a class="button" href="#" onclick="window.print()">🖨 Print Receipt</a>
-
-  <div class="footer">This is an auto-generated property tax receipt.</div>
+<div class="receipt-container">
+    <h1>🏛 Property Tax Receipt</h1>
+    <hr>
+    <div class="details">
+        <p><b>Building ID:</b> <span id="bID"></span></p>
+        <p><b>Owner:</b> <span id="owner"></span></p>
+        <p><b>Use:</b> <span id="useType"></span></p>
+        <p><b>Carpet Area:</b> <span id="carpet"></span> sq.m</p>
+    </div>
+    <hr>
+    <div class="tax-details">
+        <div class="tax-item"><span>General Tax:</span> <span id="genTax"></span></div>
+        <div class="tax-item"><span>Water Tax:</span> <span id="waterTax"></span></div>
+        <div class="tax-item"><span>Conservancy Tax:</span> <span id="consTax"></span></div>
+        <div class="tax-item"><span>Usage Charge:</span> <span id="usageCharge"></span></div>
+        <div class="tax-item total"><span>Net Tax:</span> <span id="netTax"></span></div>
+    </div>
+    <div class="status">
+        Status: <span id="statusSpan"></span>
+    </div>
+    <hr>
+    <div class="footer">
+        <p>This is an official digital receipt. Generated from the Property Tax Dashboard.</p>
+    </div>
 </div>
 
 <script>
-// Function to get query parameters from URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param) || "-";
-}
+    // Read URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById("bID").innerText = urlParams.get('building') || "N/A";
+    document.getElementById("owner").innerText = urlParams.get('owner') || "N/A";
+    document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
+    document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
 
-// Fill values dynamically
-document.getElementById("building").textContent = getQueryParam("building");
-document.getElementById("owner").textContent = getQueryParam("owner");
-document.getElementById("use").textContent = getQueryParam("use");
-document.getElementById("carpet").textContent = getQueryParam("carpet");
-document.getElementById("tax").textContent = getQueryParam("tax");
-document.getElementById("status").textContent = getQueryParam("status") || "Paid";
+    // Tax details
+    document.getElementById("genTax").innerText = "₹" + (urlParams.get('genTax') || urlParams.get('tax') || "0");
+    document.getElementById("waterTax").innerText = "₹" + (urlParams.get('waterTax') || "0");
+    document.getElementById("consTax").innerText = "₹" + (urlParams.get('consTax') || "0");
+    document.getElementById("usageCharge").innerText = "₹" + (urlParams.get('usageCharge') || "0");
+    document.getElementById("netTax").innerText = "₹" + (urlParams.get('tax') || "0");
+
+    // Status
+    const status = urlParams.get('status') || "Unknown";
+    const statusSpan = document.getElementById("statusSpan");
+    statusSpan.innerText = status;
+    if(status.toLowerCase() == "paid") statusSpan.className = "status-paid";
+    else if(status.toLowerCase() == "unpaid") statusSpan.className = "status-unpaid";
+    else statusSpan.className = "status-partial";
 </script>
 
 </body>

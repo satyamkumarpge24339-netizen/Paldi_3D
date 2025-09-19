@@ -104,7 +104,7 @@
 
     if (status === "Unpaid") {
         noticeTextEl.innerHTML = 
-            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${fiscalYear} has <b>not been received</b>.`;
+            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${fiscalYear} has <span style="color:red; font-weight:bold;">Not Paid</span>.`;
 
         instructionsEl.innerHTML = `
             <li>Kindly remit the outstanding amount at the earliest to avoid additional penalties or legal proceedings.</li>
@@ -116,7 +116,7 @@
 
     } else if (status === "Partially Paid") {
         noticeTextEl.innerHTML = 
-            `This is an official notice from the Municipal Corporation regarding the <b>partial payment of property tax</b> for your property. Our records indicate that for the fiscal year ${fiscalYear}, <b>only part of the tax has been paid</b> and a balance remains outstanding.`;
+            `This is an official notice from the Municipal Corporation regarding the <b>partial payment of property tax</b> for your property. Our records indicate that for the fiscal year ${fiscalYear}, the payment status is <span style="color:orange; font-weight:bold;">Partially Paid</span>.`;
 
         instructionsEl.innerHTML = `
             <li>Please settle the remaining balance immediately to avoid penalties or legal proceedings.</li>

@@ -12,22 +12,22 @@
     }
     .receipt-container {
         max-width: 600px;
-        margin: 50px auto;
+        margin: 40px auto;
         background: #fff;
         padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         line-height: 1.6;
     }
     h1 {
         color: #2E86C1;
         text-align: center;
-        margin-bottom: 10px;
-        font-size: 28px;
+        margin-bottom: 8px;
+        font-size: 26px;
     }
     hr {
         border: 0;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid #ddd;
         margin: 15px 0;
     }
     .details b {
@@ -51,7 +51,7 @@
     }
     .status span {
         font-weight: bold;
-        padding: 4px 8px;
+        padding: 4px 10px;
         border-radius: 4px;
         color: #fff;
     }
@@ -83,7 +83,11 @@
         <div class="tax-item"><span>Water Tax:</span> <span id="waterTax"></span></div>
         <div class="tax-item"><span>Conservancy Tax:</span> <span id="consTax"></span></div>
         <div class="tax-item"><span>Usage Charge:</span> <span id="usageCharge"></span></div>
-        <div class="tax-item total"><span>Net Tax:</span> <span id="netTax"></span></div>
+        <div class="tax-item"><span>EIC Charge:</span> <span id="eic"></span></div>
+        <div class="tax-item"><span>Education Cess:</span> <span id="eduCess"></span></div>
+        <div class="tax-item"><span>Service Tax:</span> <span id="serviceTax"></span></div>
+        <div class="tax-item"><span>Estate Rent:</span> <span id="estateRent"></span></div>
+        <div class="tax-item total"><span>Total Tax:</span> <span id="totalTax"></span></div>
     </div>
     <div class="status">
         Status: <span id="statusSpan"></span>
@@ -104,12 +108,16 @@
     document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
     document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
 
-    // Tax details (from popup)
+    // Tax details (dynamic)
     document.getElementById("genTax").innerText = "₹" + (urlParams.get('genTax') || "0");
     document.getElementById("waterTax").innerText = "₹" + (urlParams.get('waterTax') || "0");
     document.getElementById("consTax").innerText = "₹" + (urlParams.get('consTax') || "0");
     document.getElementById("usageCharge").innerText = "₹" + (urlParams.get('usageCharge') || "0");
-    document.getElementById("netTax").innerText = "₹" + (urlParams.get('tax') || "0");
+    document.getElementById("eic").innerText = "₹" + (urlParams.get('eic') || "0");
+    document.getElementById("eduCess").innerText = "₹" + (urlParams.get('eduCess') || "0");
+    document.getElementById("serviceTax").innerText = "₹" + (urlParams.get('serviceTax') || "0");
+    document.getElementById("estateRent").innerText = "₹" + (urlParams.get('estateRent') || "0");
+    document.getElementById("totalTax").innerText = "₹" + (urlParams.get('totalTax') || "0");
 
     // Status styling
     const status = urlParams.get('status') || "Unknown";

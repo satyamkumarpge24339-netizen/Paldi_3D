@@ -44,7 +44,8 @@
 
     <p>Dear Sir/Madam,</p>
 
-    <p>This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year <span id="fiscalYear"></span> has <b>not been received in full</b>.</p>
+    <!-- Main notice paragraph -->
+    <p id="noticeText"></p>
 
     <p><b>Property Details:</b></p>
     <ul>
@@ -59,13 +60,9 @@
     </ul>
 
     <p><b>Instructions:</b></p>
-    <ul>
-        <li>Kindly remit the outstanding amount at the earliest to avoid additional penalties or legal proceedings.</li>
-        <li>Payment can be made at the Municipal Corporation office or through the official online property tax portal.</li>
-        <li>For any queries, contact the Property Tax Department at <b>official@gov.in</b>.</li>
-    </ul>
+    <ul id="instructions"></ul>
 
-    <p>Please treat this matter with urgency. Non-payment may result in further administrative action in accordance with municipal regulations.</p>
+    <p id="closing"></p>
 
     <div class="footer">
         <p>Sincerely,</p>
@@ -76,21 +73,59 @@
 <script>
     // Read URL parameters from Arcade pop-up
     const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById("bID").innerText = urlParams.get('building') || "N/A";
-    document.getElementById("owner").innerText = urlParams.get('owner') || "N/A";
-    document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
-    document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
-    document.getElementById("totalTax").innerText = urlParams.get('tax') || "0";
+    const bID = urlParams.get('building') || "N/A";
+    const owner = urlParams.get('owner') || "N/A";
+    const useType = urlParams.get('use') || "N/A";
+    const carpet = urlParams.get('carpet') || "0";
+    const totalTax = urlParams.get('tax') || "0";
+    const status = urlParams.get('status') || "Unpaid"; // Payment status passed from Arcade
+
+    // Populate static fields
+    document.getElementById("bID").innerText = bID;
+    document.getElementById("owner").innerText = owner;
+    document.getElementById("useType").innerText = useType;
+    document.getElementById("carpet").innerText = carpet;
+    document.getElementById("totalTax").innerText = totalTax;
 
     // Current date
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January = 0
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
     document.getElementById("currentDate").innerText = dd + '/' + mm + '/' + yyyy;
 
-    // Fiscal year (optional dynamic, you can replace with logic if needed)
-    document.getElementById("fiscalYear").innerText = yyyy;
+    // Fiscal year
+    const fiscalYear = yyyy;
+
+    // Dynamic content based on Payment Status
+    const noticeTextEl = document.getElementById("noticeText");
+    const instructionsEl = document.getElementById("instructions");
+    const closingEl = document.getElementById("closing");
+
+    if (status === "Unpaid") {
+        noticeTextEl.innerHTML = 
+            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${fiscalYear} has <b>not been received</b>.`;
+
+        instructionsEl.innerHTML = `
+            <li>Kindly remit the outstanding amount at the earliest to avoid additional penalties or legal proceedings.</li>
+            <li>Payment can be made at the Municipal Corporation office or through the official online property tax portal.</li>
+            <li>For any queries, contact the Property Tax Department at <b>official@gov.in</b>.</li>
+        `;
+
+        closingEl.innerText = "Please treat this matter with urgency. Non-payment may result in further administrative action in accordance with municipal regulations.";
+
+    } else if (status === "Partially Paid") {
+        noticeTextEl.innerHTML = 
+            `This is an official notice from the Municipal Corporation regarding the <b>partial payment of property tax</b> for your property. Our records indicate that for the fiscal year ${fiscalYear}, <b>only part of the tax has been paid</b> and a balance remains outstanding.`;
+
+        instructionsEl.innerHTML = `
+            <li>Please settle the remaining balance immediately to avoid penalties or legal proceedings.</li>
+            <li>You may verify the balance on the official property tax portal or visit the Municipal Corporation office.</li>
+            <li>For assistance, contact the Property Tax Department at <b>official@gov.in</b>.</li>
+        `;
+
+        closingEl.innerText = "We request your cooperation in clearing the remaining dues promptly to avoid further action.";
+    }
 </script>
 
 </body>

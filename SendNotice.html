@@ -31,6 +31,16 @@
     .highlight {
         font-weight: bold;
     }
+    .tax-breakdown {
+        margin: 10px 0 20px 0;
+    }
+    .tax-breakdown li {
+        list-style-type: square;
+    }
+    .total {
+        font-weight: bold;
+        color: #C0392B;
+    }
 </style>
 </head>
 <body>
@@ -55,8 +65,16 @@
     </ul>
 
     <p><b>Outstanding Amount:</b></p>
-    <ul>
-        <li><b>Total Floor Tax:</b> ₹<span id="totalTax"></span></li>
+    <ul class="tax-breakdown">
+        <li>General Tax: ₹<span id="genTax"></span></li>
+        <li>Water Tax: ₹<span id="waterTax"></span></li>
+        <li>Conservancy Tax: ₹<span id="consTax"></span></li>
+        <li>Usage Charge: ₹<span id="usageCharge"></span></li>
+        <li>EIC Charge: ₹<span id="eic"></span></li>
+        <li>Education Cess: ₹<span id="eduCess"></span></li>
+        <li>Service Tax: ₹<span id="serviceTax"></span></li>
+        <li>Estate Rent: ₹<span id="estateRent"></span></li>
+        <li class="total">Total Tax: ₹<span id="totalTax"></span></li>
     </ul>
 
     <p><b>Instructions:</b></p>
@@ -77,14 +95,24 @@
     const owner = urlParams.get('owner') || "N/A";
     const useType = urlParams.get('use') || "N/A";
     const carpet = urlParams.get('carpet') || "0";
-    const totalTax = urlParams.get('tax') || "0";
-    const status = urlParams.get('status') || "Unpaid"; // Payment status passed from Arcade
+    const totalTax = urlParams.get('totalTax') || "0";
+    const status = urlParams.get('status') || "Unpaid";
 
     // Populate static fields
     document.getElementById("bID").innerText = bID;
     document.getElementById("owner").innerText = owner;
     document.getElementById("useType").innerText = useType;
     document.getElementById("carpet").innerText = carpet;
+
+    // Tax details
+    document.getElementById("genTax").innerText = urlParams.get('genTax') || "0";
+    document.getElementById("waterTax").innerText = urlParams.get('waterTax') || "0";
+    document.getElementById("consTax").innerText = urlParams.get('consTax') || "0";
+    document.getElementById("usageCharge").innerText = urlParams.get('usageCharge') || "0";
+    document.getElementById("eic").innerText = urlParams.get('eic') || "0";
+    document.getElementById("eduCess").innerText = urlParams.get('eduCess') || "0";
+    document.getElementById("serviceTax").innerText = urlParams.get('serviceTax') || "0";
+    document.getElementById("estateRent").innerText = urlParams.get('estateRent') || "0";
     document.getElementById("totalTax").innerText = totalTax;
 
     // Current date
@@ -107,7 +135,7 @@
             `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${fiscalYear} has <span style="color:red; font-weight:bold;">Not Paid</span>.`;
 
         instructionsEl.innerHTML = `
-            <li>Kindly remit the outstanding amount at the earliest to avoid additional penalties or legal proceedings.</li>
+            <li>Kindly remit the outstanding amount of <b>₹${totalTax}</b> at the earliest to avoid penalties or legal proceedings.</li>
             <li>Payment can be made at the Municipal Corporation office or through the official online property tax portal.</li>
             <li>For any queries, contact the Property Tax Department at <b>official@gov.in</b>.</li>
         `;
@@ -119,7 +147,7 @@
             `This is an official notice from the Municipal Corporation regarding the <b>partial payment of property tax</b> for your property. Our records indicate that for the fiscal year ${fiscalYear}, the payment status is <span style="color:orange; font-weight:bold;">Partially Paid</span>.`;
 
         instructionsEl.innerHTML = `
-            <li>Please settle the remaining balance immediately to avoid penalties or legal proceedings.</li>
+            <li>The remaining balance of <b>₹${totalTax}</b> must be settled immediately to avoid penalties or legal proceedings.</li>
             <li>You may verify the balance on the official property tax portal or visit the Municipal Corporation office.</li>
             <li>For assistance, contact the Property Tax Department at <b>official@gov.in</b>.</li>
         `;

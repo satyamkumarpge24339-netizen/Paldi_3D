@@ -97,24 +97,26 @@
 <script>
     // Read URL parameters
     const urlParams = new URLSearchParams(window.location.search);
+
+    // Basic details
     document.getElementById("bID").innerText = urlParams.get('building') || "N/A";
     document.getElementById("owner").innerText = urlParams.get('owner') || "N/A";
     document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
     document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
 
-    // Tax details
-    document.getElementById("genTax").innerText = "₹" + (urlParams.get('genTax') || urlParams.get('tax') || "0");
+    // Tax details (from popup)
+    document.getElementById("genTax").innerText = "₹" + (urlParams.get('genTax') || "0");
     document.getElementById("waterTax").innerText = "₹" + (urlParams.get('waterTax') || "0");
     document.getElementById("consTax").innerText = "₹" + (urlParams.get('consTax') || "0");
     document.getElementById("usageCharge").innerText = "₹" + (urlParams.get('usageCharge') || "0");
     document.getElementById("netTax").innerText = "₹" + (urlParams.get('tax') || "0");
 
-    // Status
+    // Status styling
     const status = urlParams.get('status') || "Unknown";
     const statusSpan = document.getElementById("statusSpan");
     statusSpan.innerText = status;
-    if(status.toLowerCase() == "paid") statusSpan.className = "status-paid";
-    else if(status.toLowerCase() == "unpaid") statusSpan.className = "status-unpaid";
+    if(status.toLowerCase() === "paid") statusSpan.className = "status-paid";
+    else if(status.toLowerCase() === "unpaid") statusSpan.className = "status-unpaid";
     else statusSpan.className = "status-partial";
 </script>
 

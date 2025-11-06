@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>💳 Paldi Property Tax Payment Portal</title>
+  <title>Paldi Municipal Property Tax Payment Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Segoe UI", Arial, sans-serif;
-      background: #f4f8fb;
+      background: #f2f4f8;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -16,26 +16,39 @@
     }
 
     .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 24px;
-      width: 340px;
-      text-align: center;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 24px 28px;
+      width: 380px;
       color: #333;
     }
 
-    .card h2 {
-      color: #2E86C1;
-      margin-bottom: 10px;
-      font-size: 20px;
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #0a3d62;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header h2 {
+      color: #0a3d62;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #555;
+      margin: 2px 0 0 0;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 10px 0;
-      font-size: 14px;
+      margin: 8px 0 15px 0;
+      font-size: 13px;
     }
 
     td {
@@ -44,66 +57,102 @@
     }
 
     td:first-child {
-      font-weight: bold;
-      color: #555;
+      font-weight: 600;
+      color: #444;
+      width: 45%;
     }
 
     .amount {
-      font-size: 18px;
-      color: #27AE60;
+      font-size: 17px;
+      color: #0a3d62;
       font-weight: bold;
     }
 
-    .pay-btn {
+    .qr-section {
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .qr-section img {
+      width: 130px;
+      height: 130px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .upi-id {
+      font-size: 13px;
+      color: #333;
+      background: #f8f9fa;
+      border: 1px solid #ccc;
       display: inline-block;
-      background: #27AE60;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: block;
+      background: #0a3d62;
       color: white;
       text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
       margin-top: 12px;
-      font-size: 15px;
+      font-size: 14px;
       transition: background 0.2s ease;
     }
 
-    .pay-btn:hover {
-      background: #1e8449;
+    .btn:hover {
+      background: #062b44;
     }
 
-    .back-link {
+    .link {
       display: block;
-      margin-top: 10px;
-      font-size: 13px;
+      text-align: center;
+      margin-top: 8px;
+      font-size: 12px;
       text-decoration: none;
-      color: #2E86C1;
+      color: #0a3d62;
     }
 
-    .back-link:hover {
+    .link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>🏛 Property Tax Payment</h2>
+    <div class="header">
+      <h2>Paldi Municipal Property Tax Portal</h2>
+      <p>Department of Urban Development, Ahmedabad</p>
+    </div>
+
     <table>
-      <tr><td>Building ID:</td><td id="bID">-</td></tr>
-      <tr><td>Owner:</td><td id="owner">-</td></tr>
-      <tr><td>Use Type:</td><td id="useType">-</td></tr>
-      <tr><td>Status:</td><td id="status">-</td></tr>
-      <tr><td>Total Tax:</td><td class="amount" id="totalTax">₹0</td></tr>
+      <tr><td>Building ID</td><td id="bID">-</td></tr>
+      <tr><td>Owner</td><td id="owner">-</td></tr>
+      <tr><td>Property Use</td><td id="useType">-</td></tr>
+      <tr><td>Status</td><td id="status">-</td></tr>
+      <tr><td>Total Tax</td><td class="amount" id="totalTax">₹0</td></tr>
     </table>
-    <a id="payLink" class="pay-btn" href="#" target="_blank">Proceed to Payment</a>
-    <a href="index.html" class="back-link">← Back to Property Map</a>
+
+    <div class="qr-section">
+      <img id="qrImage" src="" alt="Payment QR Code">
+      <div class="upi-id" id="upiId">upi://pay?pa=paldi.tax@gov&pn=Paldi%20Municipal%20Office</div>
+    </div>
+
+    <a id="upiPay" class="btn" href="#">Pay via UPI</a>
+    <a id="downloadQR" class="link" href="#" download="PaldiTax_QR.png">Download QR Code</a>
+    <a href="index.html" class="link">Back to Property Map</a>
   </div>
 
   <script>
-    // Function to read URL parameters
+    // Get URL parameters
     function getParam(key) {
       return new URLSearchParams(window.location.search).get(key) || "N/A";
     }
 
-    // Populate details
     const bID = getParam("building");
     const owner = getParam("owner");
     const use = getParam("use");
@@ -116,10 +165,18 @@
     document.getElementById("status").textContent = status;
     document.getElementById("totalTax").textContent = "₹" + total;
 
-    // 💳 Payment redirect (replace this link with your payment gateway or form)
-    const paymentUrl = "https://rzp.io/l/demoPayment?building=" + encodeURIComponent(bID) +
-                       "&amount=" + encodeURIComponent(total);
-    document.getElementById("payLink").href = paymentUrl;
+    // Generate dynamic UPI QR Code
+    const upiId = "paldi.tax@gov";
+    const payeeName = "Paldi Municipal Office";
+    const amount = total || "0";
+    const note = "Property Tax " + bID;
+
+    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+
+    document.getElementById("qrImage").src = qrUrl;
+    document.getElementById("upiPay").href = upiLink;
+    document.getElementById("downloadQR").href = qrUrl;
   </script>
 </body>
 </html>

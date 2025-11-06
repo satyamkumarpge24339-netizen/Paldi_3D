@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>💳 Paldi Property Tax Payment Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f8fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 24px;
+      width: 340px;
+      text-align: center;
+      color: #333;
+    }
+
+    .card h2 {
+      color: #2E86C1;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 6px 0;
+      text-align: left;
+    }
+
+    td:first-child {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .amount {
+      font-size: 18px;
+      color: #27AE60;
+      font-weight: bold;
+    }
+
+    .pay-btn {
+      display: inline-block;
+      background: #27AE60;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 15px;
+      transition: background 0.2s ease;
+    }
+
+    .pay-btn:hover {
+      background: #1e8449;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 10px;
+      font-size: 13px;
+      text-decoration: none;
+      color: #2E86C1;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🏛 Property Tax Payment</h2>
+    <table>
+      <tr><td>Building ID:</td><td id="bID">-</td></tr>
+      <tr><td>Owner:</td><td id="owner">-</td></tr>
+      <tr><td>Use Type:</td><td id="useType">-</td></tr>
+      <tr><td>Status:</td><td id="status">-</td></tr>
+      <tr><td>Total Tax:</td><td class="amount" id="totalTax">₹0</td></tr>
+    </table>
+    <a id="payLink" class="pay-btn" href="#" target="_blank">Proceed to Payment</a>
+    <a href="index.html" class="back-link">← Back to Property Map</a>
+  </div>
+
+  <script>
+    // Function to read URL parameters
+    function getParam(key) {
+      return new URLSearchParams(window.location.search).get(key) || "N/A";
+    }
+
+    // Populate details
+    const bID = getParam("building");
+    const owner = getParam("owner");
+    const use = getParam("use");
+    const total = getParam("totalTax");
+    const status = getParam("status");
+
+    document.getElementById("bID").textContent = bID;
+    document.getElementById("owner").textContent = owner;
+    document.getElementById("useType").textContent = use;
+    document.getElementById("status").textContent = status;
+    document.getElementById("totalTax").textContent = "₹" + total;
+
+    // 💳 Payment redirect (replace this link with your payment gateway or form)
+    const paymentUrl = "https://rzp.io/l/demoPayment?building=" + encodeURIComponent(bID) +
+                       "&amount=" + encodeURIComponent(total);
+    document.getElementById("payLink").href = paymentUrl;
+  </script>
+</body>
+</html>

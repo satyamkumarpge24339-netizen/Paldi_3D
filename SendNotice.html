@@ -1,161 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
 <title>Official Property Tax Notice</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-    body {
-        font-family: 'Times New Roman', serif;
-        background-color: #fff;
-        margin: 40px;
-        color: #2C3E50;
-        line-height: 1.6;
-    }
-    .letter-container {
-        max-width: 700px;
-        margin: auto;
-        padding: 25px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-    }
-    h2 {
-        text-align: center;
-        color: #C0392B;
-        margin-bottom: 20px;
-    }
-    p { margin: 10px 0; }
-    ul { margin-left: 20px; }
-    .footer {
-        margin-top: 40px;
-    }
-    .highlight {
-        font-weight: bold;
-    }
-    .tax-breakdown {
-        margin: 10px 0 20px 0;
-    }
-    .tax-breakdown li {
-        list-style-type: square;
-    }
-    .total {
-        font-weight: bold;
-        color: #C0392B;
-    }
+  :root{--accent:#2E86C1;--danger:#C0392B;--success:#27AE60;--muted:#666}
+  body{font-family:Inter, "Helvetica Neue", Arial, sans-serif;background:#fff;color:#222;margin:20px;padding:0}
+  .card{max-width:720px;margin:18px auto;padding:18px;border-radius:10px;border:1px solid #e6e6e6;box-shadow:0 6px 18px rgba(0,0,0,0.03)}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  header h1{font-size:16px;margin:0;color:var(--accent);letter-spacing:0.2px}
+  header .meta{font-size:12px;color:var(--muted);text-align:right}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;font-size:13px}
+  .full{grid-column:1/-1}
+  .label{color:var(--muted);font-size:12px}
+  .amount{font-weight:600}
+  .tax-list{margin:8px 0;padding:8px;border-radius:8px;background:#fbfbfb;border:1px solid #f0f0f0;font-size:13px}
+  .tax-list li{margin:6px 0;list-style:none;display:flex;justify-content:space-between}
+  .total-line{display:flex;justify-content:space-between;padding:10px;border-radius:8px;background:#fff;margin-top:8px;border:1px solid #eee}
+  .total-line .label{font-weight:700}
+  .buttons{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  a.btn{display:inline-block;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-size:14px}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-pay{background:var(--success);color:#fff}
+  .btn-danger{background:var(--danger);color:#fff}
+  .small{font-size:12px;color:var(--muted)}
+  details summary{cursor:pointer; padding:8px;border-radius:6px;border:1px solid #ececec;background:#fafafa; font-weight:600}
+  details[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
+  footer{margin-top:14px;font-size:12px;color:var(--muted)}
+  @media(max-width:520px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+  <div class="card" role="document" aria-labelledby="notice-title">
+    <header>
+      <div>
+        <h1 id="notice-title">🏛 Property Tax Summary</h1>
+        <div class="small">Municipal Corporation – Official Notice</div>
+      </div>
+      <div class="meta">
+        <div id="propId">Property ID: —</div>
+        <div id="noticeDate"></div>
+      </div>
+    </header>
 
-<div class="letter-container">
-    <h2>🏛 Official Property Tax Notice</h2>
+    <section class="grid" aria-label="Property basic info">
+      <div>
+        <div class="label">Owner</div>
+        <div id="owner" class="amount">—</div>
+      </div>
+      <div>
+        <div class="label">Contact</div>
+        <div id="contact" class="amount">—</div>
+      </div>
 
-    <p><span class="highlight">To:</span> The Property Owner / Authorized Representative</p>
-    <p><span class="highlight">Property ID:</span> <span id="bID"></span></p>
-    <p><span class="highlight">Date:</span> <span id="currentDate"></span></p>
+      <div>
+        <div class="label">Address</div>
+        <div id="address">—</div>
+      </div>
+      <div>
+        <div class="label">Email</div>
+        <div id="email">—</div>
+      </div>
 
-    <p>Dear Sir/Madam,</p>
+      <div>
+        <div class="label">Carpet Area (sq.m)</div>
+        <div id="carpet">—</div>
+      </div>
+      <div>
+        <div class="label">Dwelling / Unit ID</div>
+        <div id="dwelling">—</div>
+      </div>
 
-    <!-- Main notice paragraph -->
-    <p id="noticeText"></p>
+      <div class="full">
+        <div class="label">Current Payment Status</div>
+        <div id="status" style="font-weight:700; margin-top:4px">—</div>
+      </div>
+    </section>
 
-    <p><b>Property Details:</b></p>
-    <ul>
-        <li><b>Owner:</b> <span id="owner"></span></li>
-        <li><b>Property Use:</b> <span id="useType"></span></li>
-        <li><b>Carpet Area:</b> <span id="carpet"></span> sq.m</li>
-    </ul>
+    <section>
+      <ul class="tax-list" id="taxBreakdown" aria-label="Tax breakdown">
+        <!-- Filled by script -->
+      </ul>
 
-    <p><b>Outstanding Amount:</b></p>
-    <ul class="tax-breakdown">
-        <li>General Tax: ₹<span id="genTax"></span></li>
-        <li>Water Tax: ₹<span id="waterTax"></span></li>
-        <li>Conservancy Tax: ₹<span id="consTax"></span></li>
-        <li>Usage Charge: ₹<span id="usageCharge"></span></li>
-        <li>EIC Charge: ₹<span id="eic"></span></li>
-        <li>Education Cess: ₹<span id="eduCess"></span></li>
-        <li>Service Tax: ₹<span id="serviceTax"></span></li>
-        <li>Estate Rent: ₹<span id="estateRent"></span></li>
-        <li class="total">Total Tax: ₹<span id="totalTax"></span></li>
-    </ul>
+      <div class="total-line" aria-live="polite">
+        <div>
+          <div class="label">Outstanding (tax only)</div>
+          <div id="outstanding" class="amount">₹0.00</div>
+        </div>
+        <div>
+          <div class="label">Penalty</div>
+          <div id="penalty" class="amount">₹0.00</div>
+        </div>
+      </div>
 
-    <p><b>Instructions:</b></p>
-    <ul id="instructions"></ul>
+      <div class="total-line" style="margin-top:8px;background:#f7fbff;border-color:#eaf2ff">
+        <div class="label">Amount Due</div>
+        <div id="amountDue" class="amount">₹0.00</div>
+      </div>
+    </section>
 
-    <p id="closing"></p>
+    <section class="buttons" aria-label="Actions">
+      <a id="receiptBtn" class="btn btn-primary" target="_blank" rel="noopener">View Receipt</a>
+      <a id="payBtn" class="btn btn-pay" target="_blank" rel="noopener">Pay Now</a>
+      <a id="noticeBtn" class="btn btn-danger" target="_blank" rel="noopener">Send Notice</a>
 
-    <div class="footer">
-        <p>Sincerely,</p>
-        <p><b>Property Tax Collection Officer</b><br>Municipal Corporation</p>
-    </div>
-</div>
+      <details id="detailsPanel" aria-summary="View Tax Breakdown">
+        <summary id="detailsSummary">View Tax Breakdown</summary>
+        <div style="padding:10px;">
+          <div id="detailsContent" style="font-size:13px;color:#222"></div>
+        </div>
+      </details>
+
+      <a id="downloadLink" class="small" target="_blank" rel="noopener">Download notice / image</a>
+    </section>
+
+    <footer>
+      <div class="small">This notice was generated automatically. For disputes or clarifications, contact <span id="helpEmail">official@gov.in</span>.</div>
+    </footer>
+  </div>
 
 <script>
-    // Read URL parameters from the popup
-    const urlParams = new URLSearchParams(window.location.search);
+(function(){
+  // Helper: read query params (handles multiple common param names)
+  const p = new URLSearchParams(window.location.search);
 
-    // Basic fields from Arcade
-    const bID = urlParams.get('building') || "N/A";             // Dwelling_ID
-    const owner = urlParams.get('owner') || "N/A";
-    const useType = urlParams.get('use') || "N/A";
-    const carpet = urlParams.get('carpet') || "0";
-
-    const totalTax = urlParams.get('totalTax') || "0";
-    const status = urlParams.get('status') || "Unpaid";
-
-    // Insert into the page
-    document.getElementById("bID").innerText = bID;
-    document.getElementById("owner").innerText = owner;
-    document.getElementById("useType").innerText = useType;
-    document.getElementById("carpet").innerText = carpet;
-
-    // Tax components
-    document.getElementById("genTax").innerText = urlParams.get('genTax') || "0";
-    document.getElementById("waterTax").innerText = urlParams.get('waterTax') || "0";
-    document.getElementById("consTax").innerText = urlParams.get('consTax') || "0";
-    document.getElementById("usageCharge").innerText = urlParams.get('usageCharge') || "0";
-    document.getElementById("eic").innerText = urlParams.get('eic') || "0";
-    document.getElementById("eduCess").innerText = urlParams.get('eduCess') || "0";
-    document.getElementById("serviceTax").innerText = urlParams.get('serviceTax') || "0";
-    document.getElementById("estateRent").innerText = urlParams.get('estateRent') || "0";
-    document.getElementById("totalTax").innerText = totalTax;
-
-    // Current date
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    document.getElementById("currentDate").innerText = dd + '/' + mm + '/' + yyyy;
-
-    // Dynamic fields based on payment status
-    const noticeTextEl = document.getElementById("noticeText");
-    const instructionsEl = document.getElementById("instructions");
-    const closingEl = document.getElementById("closing");
-
-    if (status === "Unpaid") {
-        noticeTextEl.innerHTML =
-            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${yyyy} has <span style="color:red; font-weight:bold;">NOT BEEN PAID</span>.`;
-
-        instructionsEl.innerHTML = `
-            <li>Please remit the outstanding amount of <b>₹${totalTax}</b> immediately to avoid penalties or legal action.</li>
-            <li>Payment can be made online or at the Municipal Corporation office.</li>
-            <li>For assistance, contact <b>official@gov.in</b>.</li>
-        `;
-
-        closingEl.innerText = "Please treat this matter as urgent. Continued non-payment may lead to administrative enforcement.";
+  function getParam(names, fallback){
+    for(const n of names){
+      const v = p.get(n);
+      if(v !== null && v !== undefined && v !== "") return v;
     }
+    return fallback;
+  }
 
-    else if (status === "Partially Paid") {
-        noticeTextEl.innerHTML =
-            `This is an official notice regarding the <b>partial payment</b> of property tax. For the fiscal year ${yyyy}, the payment status is <span style="color:orange; font-weight:bold;">PARTIALLY PAID</span>.`;
+  // Basic fields (support multiple param name variants)
+  const dwelling = getParam(['Dwelling_ID','dwelling','dwelling_id','building','Building','building_id'], 'N/A');
+  const owner = decodeURIComponent(getParam(['owner','Owner','Owner_Name'], 'N/A'));
+  const phone = decodeURIComponent(getParam(['phone','Phone','contact'], 'N/A'));
+  const email = decodeURIComponent(getParam(['email','Email'], 'N/A'));
+  const address = decodeURIComponent(getParam(['address','Address'], 'N/A'));
+  const carpet = parseFloat(getParam(['carpet','Carpet_Area','Carpet_A_1','Carpet_Are'], '0')) || 0;
 
-        instructionsEl.innerHTML = `
-            <li>The remaining balance of <b>₹${totalTax}</b> must be cleared at the earliest.</li>
-            <li>You may verify the balance online or visit the Corporation office.</li>
-            <li>For assistance, contact <b>official@gov.in</b>.</li>
-        `;
+  // Tax values (try common param names)
+  const toNumber = s => { const v = parseFloat(String(s).replace(/[^\d.-]/g,'')); return isNaN(v)?0:v; };
+  const genTax = toNumber(getParam(['genTax','General_Ta','General_Tax','GeneralTax','general_tax'], '0'));
+  const waterTax = toNumber(getParam(['waterTax','Water_Tax','WaterTax','water_tax','Water'], '0'));
+  const consTax = toNumber(getParam(['consTax','Conservanc','Conservancy_Tax','Conservancy','conservanc'], '0'));
+  const usageCharge = toNumber(getParam(['usageCharge','Usage_Char','UsageCharges','Usage_Charge'], '0'));
+  const eduCess = toNumber(getParam(['eduCess','Edu_Cess','Education_Cess','EducationCess'], '0'));
+  const eic = toNumber(getParam(['eic','EIC','EIC_Charge'], '0'));
+  const serviceTax = toNumber(getParam(['serviceTax','Service_Tax','ServiceTax'], '0'));
+  const estateRent = toNumber(getParam(['estateRent','Estate_Rent'], '0'));
 
-        closingEl.innerText = "We request you to clear the balance promptly to avoid further action.";
+  // Totals and status
+  const totalTaxParam = toNumber(getParam(['totalTax','Tot_Tax','Total','TotalTax','total'], '0'));
+  const statusRaw = getParam(['status','Payment_St','PaymentStatus','payment_status'], 'Unknown');
+
+  // Payment links (your existing GH pages)
+  const baseReceipt = "https://satyamkumarpge24339-netizen.github.io/Paldi_3D/SendReceipt.html";
+  const basePay = "https://satyamkumarpge24339-netizen.github.io/Paldi_3D/ConfirmPayment.html";
+  const baseNotice = "https://satyamkumarpge24339-netizen.github.io/Paldi_3D/SendNotice.html";
+  // Build query for redirects
+  function makeQuery(obj){
+    return '?' + Object.entries(obj).map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(String(v))).join('&');
+  }
+
+  const receiptUrl = baseReceipt + makeQuery({
+    dwelling, owner, address, email, phone, totalTax: totalTaxParam.toFixed(2), status: statusRaw,
+    genTax: genTax.toFixed(2), waterTax: waterTax.toFixed(2), consTax: consTax.toFixed(2),
+    eduCess: eduCess.toFixed(2), usageCharge: usageCharge.toFixed(2)
+  });
+
+  const payUrl = basePay + makeQuery({ dwelling, owner, totalTax: totalTaxParam.toFixed(2), status: statusRaw });
+  const noticeUrl = baseNotice + makeQuery({ dwelling, owner, totalTax: totalTaxParam.toFixed(2), status: statusRaw });
+
+  // Penalty calculation
+  // default due date (if none provided) - sensible default: end of June of fiscal year
+  const defaultDue = getParam(['dueDate'], '2025-06-30'); // YYYY-MM-DD
+  function monthsBetween(dateFrom, dateTo){
+    const d1 = new Date(dateFrom.getFullYear(), dateFrom.getMonth(), 1);
+    const d2 = new Date(dateTo.getFullYear(), dateTo.getMonth(), 1);
+    return Math.max(0, (d2.getFullYear() - d1.getFullYear())*12 + (d2.getMonth() - d1.getMonth()));
+  }
+  const today = new Date(); // will reflect client date; server side will still show accurate locally
+  const dueParam = getParam(['dueDate','due','DueDate'], defaultDue);
+  let dueDate = new Date(dueParam);
+  if (isNaN(dueDate.getTime())){
+    // fallback parsing if user passed dd/mm/yyyy
+    const parts = dueParam.split('/');
+    if(parts.length===3){
+      dueDate = new Date(parts[2], parseInt(parts[1],10)-1, parseInt(parts[0],10));
+    } else {
+      dueDate = new Date(defaultDue);
     }
+  }
+
+  const monthsOverdue = Math.max(0, monthsBetween(dueDate, today));
+  const penaltyRatePerMonth = 0.02; // 2% per month
+  const penalty = +(totalTaxParam * penaltyRatePerMonth * monthsOverdue).toFixed(2);
+  const outstanding = +totalTaxParam.toFixed(2);
+  const amountDue = +(outstanding + penalty).toFixed(2);
+
+  // Fill DOM
+  document.getElementById('propId').innerText = 'Property ID: ' + dwelling;
+  // date in dd/mm/yyyy
+  const dd = String(today.getDate()).padStart(2,'0'), mm = String(today.getMonth()+1).padStart(2,'0'), yyyy = today.getFullYear();
+  document.getElementById('noticeDate').innerText = dd + '/' + mm + '/' + yyyy;
+
+  document.getElementById('owner').innerText = owner;
+  document.getElementById('contact').innerText = phone + (email && email !== 'N/A' ? ' • ' + email : '');
+  document.getElementById('address').innerText = address || 'N/A';
+  document.getElementById('email').innerText = email || 'N/A';
+  document.getElementById('carpet').innerText = (+carpet).toFixed(2);
+  document.getElementById('dwelling').innerText = dwelling;
+
+  // Status color
+  const statusEl = document.getElementById('status');
+  statusEl.innerText = statusRaw;
+  if(statusRaw.toLowerCase()==='paid') statusEl.style.color = 'green';
+  else if(statusRaw.toLowerCase()==='unpaid') statusEl.style.color = 'red';
+  else statusEl.style.color = 'orange';
+
+  // Tax breakdown list
+  const breakdown = [
+    ['General Tax', genTax],
+    ['Water Tax', waterTax],
+    ['Conservancy Tax', consTax],
+    ['Usage Charges', usageCharge],
+    ['EIC Charge', eic],
+    ['Education Cess', eduCess],
+    ['Service Tax', serviceTax],
+    ['Estate Rent', estateRent]
+  ];
+
+  const taxList = document.getElementById('taxBreakdown');
+  taxList.innerHTML = breakdown.map(([label, val]) => {
+    return `<li><span class="label">${label}</span><strong>₹${(+val).toFixed(2)}</strong></li>`;
+  }).join('');
+
+  // Details content (more readable)
+  const detailsContent = document.getElementById('detailsContent');
+  detailsContent.innerHTML = breakdown.map(([label,val]) => `<div style="display:flex;justify-content:space-between;padding:6px 0;"><div>${label}</div><div>₹${(+val).toFixed(2)}</div></div>`).join('') +
+    `<hr style="border:none;border-top:1px solid #eee;margin:8px 0">` +
+    `<div style="display:flex;justify-content:space-between"><div><strong>Outstanding</strong></div><div><strong>₹${outstanding.toFixed(2)}</strong></div></div>` +
+    `<div style="display:flex;justify-content:space-between"><div><strong>Penalty (${(penaltyRatePerMonth*100).toFixed(0)}% per month × ${monthsOverdue} mo)</strong></div><div><strong>₹${penalty.toFixed(2)}</strong></div></div>` +
+    `<div style="display:flex;justify-content:space-between;margin-top:6px"><div><strong>Amount Due</strong></div><div><strong>₹${amountDue.toFixed(2)}</strong></div></div>`;
+
+  // Totals in main area
+  document.getElementById('outstanding').innerText = '₹' + outstanding.toFixed(2);
+  document.getElementById('penalty').innerText = '₹' + penalty.toFixed(2);
+  document.getElementById('amountDue').innerText = '₹' + amountDue.toFixed(2);
+
+  // Buttons links
+  const receiptBtn = document.getElementById('receiptBtn');
+  const payBtn = document.getElementById('payBtn');
+  const noticeBtn = document.getElementById('noticeBtn');
+  const downloadLink = document.getElementById('downloadLink');
+
+  receiptBtn.href = receiptUrl;
+  payBtn.href = payUrl;
+  noticeBtn.href = noticeUrl;
+
+  // If already paid, disable Pay Now
+  if(statusRaw && statusRaw.toLowerCase()==='paid'){
+    payBtn.style.opacity = '0.6';
+    payBtn.style.pointerEvents = 'none';
+    payBtn.innerText = 'Already Paid';
+  }
+
+  // Provide download link to the uploaded file path (tooling will convert)
+  // <-- local file path from earlier upload (developer instruction): /mnt/data/33b3a77e-75cf-4a39-a0aa-9296de7cc439.png
+  downloadLink.href = '/mnt/data/33b3a77e-75cf-4a39-a0aa-9296de7cc439.png';
+  downloadLink.innerText = 'Download notice / image';
+
+  // Small help email
+  document.getElementById('helpEmail').innerText = getParam(['helpEmail','help','officialEmail'], 'official@gov.in');
+
+})();
 </script>
-
 </body>
 </html>

@@ -2,131 +2,349 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Property Tax Receipt</title>
+<title>Property Tax Bill / Receipt</title>
 <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f8f9fa;
+        font-family: "Arial", Helvetica, sans-serif;
+        background-color: #ffffff;
         margin: 0;
-        padding: 0;
+        padding: 20px;
     }
-    .receipt-container {
-        max-width: 600px;
-        margin: 40px auto;
-        background: #fff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        line-height: 1.6;
+    .bill-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        border: 1px solid #d0d0d0;
+        padding: 15px 20px 5px 20px;
+        box-sizing: border-box;
     }
-    h1 {
-        color: #2E86C1;
-        text-align: center;
+    .amc-header {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #d0d0d0;
+        padding-bottom: 8px;
         margin-bottom: 8px;
-        font-size: 26px;
     }
-    hr {
-        border: 0;
-        border-top: 1px solid #ddd;
-        margin: 15px 0;
+    .amc-logo {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 1px solid #c0c0c0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
     }
-    .details b {
-        color: #2C3E50;
+    .amc-title {
+        flex: 1;
+        text-align: center;
     }
-    .tax-item {
+    .amc-title-main {
+        font-size: 18px;
+        font-weight: bold;
+        color: #c5362a;
+        text-transform: uppercase;
+    }
+    .amc-title-sub {
+        font-size: 13px;
+        font-weight: bold;
+        margin-top: 3px;
+    }
+    .bill-info-box {
+        width: 180px;
+        font-size: 11px;
+        border-left: 1px solid #d0d0d0;
+        padding-left: 8px;
+    }
+    .bill-info-row {
         display: flex;
         justify-content: space-between;
-        padding: 5px 0;
+        padding: 2px 0;
     }
-    .total {
+    .bill-info-label {
+        background:#f9a76b;
+        padding: 2px 4px;
+        font-weight:bold;
+    }
+    .bill-info-value {
+        padding: 2px 4px;
+    }
+
+    .section-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        margin-top: 6px;
+    }
+    .section-table td {
+        padding: 3px 4px;
+        border: 1px solid #e0e0e0;
+    }
+    .section-title-row td {
+        background-color: #f9a76b;
         font-weight: bold;
-        color: #C0392B;
-        font-size: 18px;
+    }
+    .label-cell {
+        font-weight: bold;
+        width: 140px;
+    }
+
+    .tax-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
         margin-top: 10px;
-        border-top: 1px solid #ccc;
-        padding-top: 10px;
     }
-    .status {
-        margin-top: 15px;
+    .tax-table th,
+    .tax-table td {
+        border: 1px solid #e0e0e0;
+        padding: 4px 5px;
+        text-align: right;
     }
-    .status span {
-        font-weight: bold;
-        padding: 4px 10px;
-        border-radius: 4px;
-        color: #fff;
-    }
-    .status-paid { background-color: #27AE60; }
-    .status-unpaid { background-color: #C0392B; }
-    .status-partial { background-color: #E67E22; }
-    .footer {
+    .tax-table th {
+        background-color: #f9a76b;
         text-align: center;
-        margin-top: 20px;
-        font-size: 12px;
-        color: #7f8c8d;
+    }
+    .tax-head-col {
+        text-align: left;
+        width: 40%;
+    }
+    .total-row td {
+        font-weight: bold;
+    }
+    .net-row td {
+        font-weight: bold;
+        background-color: #ffe4e4;
+    }
+
+    .bottom-note {
+        margin-top: 18px;
+        font-size: 10px;
+        border-top: 1px solid #d0d0d0;
+        padding-top: 5px;
+        display: flex;
+        justify-content: space-between;
     }
 </style>
 </head>
 <body>
 
-<div class="receipt-container">
-    <h1>🏛 Property Tax Receipt</h1>
-    <hr>
-    <div class="details">
-        <p><b>Building ID:</b> <span id="bID"></span></p>
-        <p><b>Owner:</b> <span id="owner"></span></p>
-        <p><b>Use:</b> <span id="useType"></span></p>
-        <p><b>Carpet Area:</b> <span id="carpet"></span> sq.m</p>
+<div class="bill-wrapper">
+    <!-- HEADER -->
+    <div class="amc-header">
+        <div class="amc-logo">
+            AMC<br>LOGO
+        </div>
+        <div class="amc-title">
+            <div class="amc-title-main">AMDAVAD MUNICIPAL CORPORATION</div>
+            <div class="amc-title-sub">MAHANAGAR SEWA SADAN</div>
+        </div>
+        <div class="bill-info-box">
+            <div class="bill-info-row">
+                <span class="bill-info-label">BILLING YEAR</span>
+                <span class="bill-info-value" id="billingYear"></span>
+            </div>
+            <div class="bill-info-row">
+                <span class="bill-info-label">BILL DATE</span>
+                <span class="bill-info-value" id="billDate"></span>
+            </div>
+            <div class="bill-info-row">
+                <span class="bill-info-label">BILL DUE DATE</span>
+                <span class="bill-info-value" id="dueDate"></span>
+            </div>
+            <div class="bill-info-row">
+                <span class="bill-info-label">STATUS</span>
+                <span class="bill-info-value" id="payStatus"></span>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="tax-details">
-        <div class="tax-item"><span>General Tax:</span> <span id="genTax"></span></div>
-        <div class="tax-item"><span>Water Tax:</span> <span id="waterTax"></span></div>
-        <div class="tax-item"><span>Conservancy Tax:</span> <span id="consTax"></span></div>
-        <div class="tax-item"><span>Usage Charge:</span> <span id="usageCharge"></span></div>
-        <div class="tax-item"><span>EIC Charge:</span> <span id="eic"></span></div>
-        <div class="tax-item"><span>Education Cess:</span> <span id="eduCess"></span></div>
-        <div class="tax-item"><span>Service Tax:</span> <span id="serviceTax"></span></div>
-        <div class="tax-item"><span>Estate Rent:</span> <span id="estateRent"></span></div>
-        <div class="tax-item total"><span>Total Tax:</span> <span id="totalTax"></span></div>
-    </div>
-    <div class="status">
-        Status: <span id="statusSpan"></span>
-    </div>
-    <hr>
-    <div class="footer">
-        <p>This is an official digital receipt. Generated from the Property Tax Dashboard.</p>
+
+    <!-- OWNER / ADDRESS -->
+    <table class="section-table">
+        <tr class="section-title-row">
+            <td colspan="2">OWNER DETAILS</td>
+        </tr>
+        <tr>
+            <td class="label-cell">OWNER(S) NAME</td>
+            <td id="ownerName"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">POSTAL ADDRESS</td>
+            <td id="postalAddress"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">EMAIL</td>
+            <td id="email"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">PHONE</td>
+            <td id="phone"></td>
+        </tr>
+    </table>
+
+    <!-- PROPERTY DETAILS (only fields we have) -->
+    <table class="section-table">
+        <tr class="section-title-row">
+            <td colspan="4">PROPERTY DETAILS</td>
+        </tr>
+        <tr>
+            <td class="label-cell">SOCIETY NAME</td>
+            <td id="societyName"></td>
+            <td class="label-cell">UNIT / FLAT NO.</td>
+            <td id="unitNo"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">DWELLING ID</td>
+            <td id="dwellingId"></td>
+            <td class="label-cell">USAGE</td>
+            <td id="usageDesc"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">CONSTRUCTION YEAR</td>
+            <td id="cnstrYear"></td>
+            <td class="label-cell">CARPET AREA (Sq.m)</td>
+            <td id="carpetArea"></td>
+        </tr>
+    </table>
+
+    <!-- TAX HEADS -->
+    <table class="tax-table">
+        <thead>
+            <tr>
+                <th class="tax-head-col">TAX HEADS</th>
+                <th>ARREARS</th>
+                <th>CURRENT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="tax-head-col">PROPERTY TAX</td>
+                <td>0.00</td>
+                <td id="propertyTax"></td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">WATER TAX</td>
+                <td>0.00</td>
+                <td id="waterTax"></td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">CONSERVANCY TAX</td>
+                <td>0.00</td>
+                <td id="conservancyTax"></td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">USAGE CHARGE</td>
+                <td>0.00</td>
+                <td id="usageCharge"></td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">EDUCATION CESS</td>
+                <td>0.00</td>
+                <td id="educationCess"></td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">EIC CHARGE</td>
+                <td>0.00</td>
+                <td id="eicCharge">0.00</td>
+            </tr>
+            <tr>
+                <td class="tax-head-col">INTEREST</td>
+                <td>0.00</td>
+                <td id="interestAmt">0.00</td>
+            </tr>
+            <tr class="total-row">
+                <td class="tax-head-col">TOTAL PAYABLE TAX</td>
+                <td>0.00</td>
+                <td id="totalTax"></td>
+            </tr>
+            <tr class="net-row">
+                <td class="tax-head-col">NET PAYABLE AMOUNT</td>
+                <td colspan="2" id="netPayable"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- FOOTER NOTE -->
+    <div class="bottom-note">
+        <div>NOTE: This is computer generated print, hence no signature required.</div>
+        <div id="printDateTime"></div>
     </div>
 </div>
 
 <script>
-    // Read URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
+    const p = new URLSearchParams(window.location.search);
 
-    // Basic details
-    document.getElementById("bID").innerText = urlParams.get('building') || "N/A";
-    document.getElementById("owner").innerText = urlParams.get('owner') || "N/A";
-    document.getElementById("useType").innerText = urlParams.get('use') || "N/A";
-    document.getElementById("carpet").innerText = urlParams.get('carpet') || "0";
+    // ---- BASIC FIELDS FROM URL ----
+    const owner    = p.get("owner")      || "N/A";
+    const address  = p.get("address")    || "N/A";
+    const email    = p.get("email")      || "N/A";
+    const phone    = p.get("phone")      || "N/A";
+    const society  = p.get("society")    || "";     // Galaxy Tower
+    const unitNo   = p.get("unitNo")     || "";     // 2
+    const dwelling = p.get("dwellingId") || "";     // PAL-R-091_F03-2
+    const usage    = p.get("usage")      || "Residential";
+    const cnYear   = p.get("cnstrYear")  || "";     // 2013
+    const carpet   = p.get("carpet")     || "0";    // 278.85
 
-    // Tax details (dynamic)
-    document.getElementById("genTax").innerText = "₹" + (urlParams.get('genTax') || "0");
-    document.getElementById("waterTax").innerText = "₹" + (urlParams.get('waterTax') || "0");
-    document.getElementById("consTax").innerText = "₹" + (urlParams.get('consTax') || "0");
-    document.getElementById("usageCharge").innerText = "₹" + (urlParams.get('usageCharge') || "0");
-    document.getElementById("eic").innerText = "₹" + (urlParams.get('eic') || "0");
-    document.getElementById("eduCess").innerText = "₹" + (urlParams.get('eduCess') || "0");
-    document.getElementById("serviceTax").innerText = "₹" + (urlParams.get('serviceTax') || "0");
-    document.getElementById("estateRent").innerText = "₹" + (urlParams.get('estateRent') || "0");
-    document.getElementById("totalTax").innerText = "₹" + (urlParams.get('totalTax') || "0");
+    const genTax   = parseFloat(p.get("genTax")   || "0"); // General_Ta
+    const waterTax = parseFloat(p.get("waterTax") || "0"); // Water_Tax
+    const consTax  = parseFloat(p.get("consTax")  || "0"); // Conservanc
+    const eduCess  = parseFloat(p.get("eduCess")  || "0"); // Edu_Cess
+    const usageCh  = parseFloat(p.get("usageCharge") || "0"); // Usage_Char
+    const totTax   = parseFloat(p.get("totalTax") || "0"); // Tot_Tax
+    const status   = p.get("status") || "Paid";
 
-    // Status styling
-    const status = urlParams.get('status') || "Unknown";
-    const statusSpan = document.getElementById("statusSpan");
-    statusSpan.innerText = status;
-    if(status.toLowerCase() === "paid") statusSpan.className = "status-paid";
-    else if(status.toLowerCase() === "unpaid") statusSpan.className = "status-unpaid";
-    else statusSpan.className = "status-partial";
+    function fmt(val) {
+        return val.toFixed(2);
+    }
+
+    // ---- OWNER / PROPERTY DETAILS ----
+    document.getElementById("ownerName").innerText    = owner;
+    document.getElementById("postalAddress").innerText= address;
+    document.getElementById("email").innerText        = email;
+    document.getElementById("phone").innerText        = phone;
+    document.getElementById("societyName").innerText  = society;
+    document.getElementById("unitNo").innerText       = unitNo;
+    document.getElementById("dwellingId").innerText   = dwelling;
+    document.getElementById("usageDesc").innerText    = usage;
+    document.getElementById("cnstrYear").innerText    = cnYear;
+    document.getElementById("carpetArea").innerText   = carpet;
+
+    // ---- TAX VALUES ----
+    document.getElementById("propertyTax").innerText   = fmt(genTax);
+    document.getElementById("waterTax").innerText      = fmt(waterTax);
+    document.getElementById("conservancyTax").innerText= fmt(consTax);
+    document.getElementById("usageCharge").innerText   = fmt(usageCh);
+    document.getElementById("educationCess").innerText = fmt(eduCess);
+    document.getElementById("totalTax").innerText      = fmt(totTax);
+    document.getElementById("netPayable").innerText    = fmt(totTax);
+
+    // ---- BILLING YEAR, DATES, STATUS ----
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const yyyy = today.getFullYear();
+
+    // simple Indian FY logic: FY 2024-25 etc.
+    let fyStartYear = (today.getMonth() + 1) >= 4 ? yyyy : yyyy - 1;
+    const fyStr = fyStartYear + "-" + String(fyStartYear + 1).slice(-2);
+
+    document.getElementById("billingYear").innerText = fyStr;
+    document.getElementById("billDate").innerText    = dd + "-" + mm + "-" + yyyy;
+
+    // due date = +30 days
+    const due = new Date(today);
+    due.setDate(due.getDate() + 30);
+    const dd2 = String(due.getDate()).padStart(2, "0");
+    const mm2 = String(due.getMonth() + 1).padStart(2, "0");
+    const yyyy2 = due.getFullYear();
+    document.getElementById("dueDate").innerText = dd2 + "-" + mm2 + "-" + yyyy2;
+
+    document.getElementById("payStatus").innerText = status;
+
+    // footer datetime
+    document.getElementById("printDateTime").innerText =
+        dd + "-" + mm + "-" + yyyy + "  " + today.toLocaleTimeString("en-IN", {hour: "2-digit", minute:"2-digit"});
+
 </script>
-
 </body>
 </html>

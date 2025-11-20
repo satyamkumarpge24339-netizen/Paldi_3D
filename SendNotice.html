@@ -49,7 +49,7 @@
     <h2>🏛 Official Property Tax Notice</h2>
 
     <p><span class="highlight">To:</span> The Property Owner / Authorized Representative</p>
-    <p><span class="highlight">Building ID:</span> <span id="bID"></span></p>
+    <p><span class="highlight">Property ID:</span> <span id="bID"></span></p>
     <p><span class="highlight">Date:</span> <span id="currentDate"></span></p>
 
     <p>Dear Sir/Madam,</p>
@@ -89,22 +89,25 @@
 </div>
 
 <script>
-    // Read URL parameters from Arcade pop-up
+    // Read URL parameters from the popup
     const urlParams = new URLSearchParams(window.location.search);
-    const bID = urlParams.get('building') || "N/A";
+
+    // Basic fields from Arcade
+    const bID = urlParams.get('building') || "N/A";             // Dwelling_ID
     const owner = urlParams.get('owner') || "N/A";
     const useType = urlParams.get('use') || "N/A";
     const carpet = urlParams.get('carpet') || "0";
+
     const totalTax = urlParams.get('totalTax') || "0";
     const status = urlParams.get('status') || "Unpaid";
 
-    // Populate static fields
+    // Insert into the page
     document.getElementById("bID").innerText = bID;
     document.getElementById("owner").innerText = owner;
     document.getElementById("useType").innerText = useType;
     document.getElementById("carpet").innerText = carpet;
 
-    // Tax details
+    // Tax components
     document.getElementById("genTax").innerText = urlParams.get('genTax') || "0";
     document.getElementById("waterTax").innerText = urlParams.get('waterTax') || "0";
     document.getElementById("consTax").innerText = urlParams.get('consTax') || "0";
@@ -122,37 +125,35 @@
     const yyyy = today.getFullYear();
     document.getElementById("currentDate").innerText = dd + '/' + mm + '/' + yyyy;
 
-    // Fiscal year
-    const fiscalYear = yyyy;
-
-    // Dynamic content based on Payment Status
+    // Dynamic fields based on payment status
     const noticeTextEl = document.getElementById("noticeText");
     const instructionsEl = document.getElementById("instructions");
     const closingEl = document.getElementById("closing");
 
     if (status === "Unpaid") {
-        noticeTextEl.innerHTML = 
-            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${fiscalYear} has <span style="color:red; font-weight:bold;">Not Paid</span>.`;
+        noticeTextEl.innerHTML =
+            `This is an official notice from the Municipal Corporation regarding the <b>outstanding property tax</b> for your property. Our records indicate that the payment for the fiscal year ${yyyy} has <span style="color:red; font-weight:bold;">NOT BEEN PAID</span>.`;
 
         instructionsEl.innerHTML = `
-            <li>Kindly remit the outstanding amount of <b>₹${totalTax}</b> at the earliest to avoid penalties or legal proceedings.</li>
-            <li>Payment can be made at the Municipal Corporation office or through the official online property tax portal.</li>
-            <li>For any queries, contact the Property Tax Department at <b>official@gov.in</b>.</li>
+            <li>Please remit the outstanding amount of <b>₹${totalTax}</b> immediately to avoid penalties or legal action.</li>
+            <li>Payment can be made online or at the Municipal Corporation office.</li>
+            <li>For assistance, contact <b>official@gov.in</b>.</li>
         `;
 
-        closingEl.innerText = "Please treat this matter with urgency. Non-payment may result in further administrative action in accordance with municipal regulations.";
+        closingEl.innerText = "Please treat this matter as urgent. Continued non-payment may lead to administrative enforcement.";
+    }
 
-    } else if (status === "Partially Paid") {
-        noticeTextEl.innerHTML = 
-            `This is an official notice from the Municipal Corporation regarding the <b>partial payment of property tax</b> for your property. Our records indicate that for the fiscal year ${fiscalYear}, the payment status is <span style="color:orange; font-weight:bold;">Partially Paid</span>.`;
+    else if (status === "Partially Paid") {
+        noticeTextEl.innerHTML =
+            `This is an official notice regarding the <b>partial payment</b> of property tax. For the fiscal year ${yyyy}, the payment status is <span style="color:orange; font-weight:bold;">PARTIALLY PAID</span>.`;
 
         instructionsEl.innerHTML = `
-            <li>The remaining balance of <b>₹${totalTax}</b> must be settled immediately to avoid penalties or legal proceedings.</li>
-            <li>You may verify the balance on the official property tax portal or visit the Municipal Corporation office.</li>
-            <li>For assistance, contact the Property Tax Department at <b>official@gov.in</b>.</li>
+            <li>The remaining balance of <b>₹${totalTax}</b> must be cleared at the earliest.</li>
+            <li>You may verify the balance online or visit the Corporation office.</li>
+            <li>For assistance, contact <b>official@gov.in</b>.</li>
         `;
 
-        closingEl.innerText = "We request your cooperation in clearing the remaining dues promptly to avoid further action.";
+        closingEl.innerText = "We request you to clear the balance promptly to avoid further action.";
     }
 </script>
 

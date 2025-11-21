@@ -1,69 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Paldi Municipal Property Tax Payment Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       font-family: "Segoe UI", Arial, sans-serif;
       background: #f2f4f8;
+      padding: 0;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
     }
 
     .card {
       background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      width: 420px;
       padding: 26px 30px;
-      width: 400px;
-      color: #333;
-      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
     }
 
-    .header {
+    h2 {
+      margin: 0;
+      text-align: center;
+      color: #0a3d62;
+      font-size: 22px;
       border-bottom: 2px solid #0a3d62;
       padding-bottom: 8px;
-      margin-bottom: 14px;
-    }
-
-    .header h2 {
-      color: #0a3d62;
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .header p {
-      font-size: 12px;
-      color: #555;
-      margin: 3px 0 0;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin: 8px 0 15px 0;
-      font-size: 13px;
-      text-align: left;
+      margin-top: 16px;
+      font-size: 14px;
     }
 
     td {
-      padding: 6px 0;
+      padding: 4px 0;
     }
 
     td:first-child {
-      font-weight: 600;
-      color: #444;
-      width: 45%;
+      font-weight: bold;
+      width: 42%;
     }
 
     .amount {
-      font-size: 18px;
+      font-size: 20px;
       color: #0a3d62;
       font-weight: bold;
     }
@@ -74,124 +61,122 @@
     }
 
     .qr-section img {
-      width: 130px;
-      height: 130px;
+      width: 140px;
+      height: 140px;
       border: 1px solid #ddd;
       border-radius: 6px;
       margin-bottom: 10px;
     }
 
     .upi-id {
-      font-size: 13px;
-      color: #333;
+      display: inline-block;
       background: #f8f9fa;
       border: 1px solid #ccc;
-      display: inline-block;
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 4px;
+      color: #333;
+      font-size: 13px;
+      margin-top: 5px;
     }
 
     .btn {
       display: block;
       background: #0a3d62;
-      color: white;
-      text-decoration: none;
+      color: #fff;
       padding: 10px;
-      border-radius: 6px;
+      margin-top: 16px;
       text-align: center;
-      margin-top: 12px;
-      font-size: 14px;
-      transition: background 0.2s ease;
-    }
-
-    .btn:hover {
-      background: #062b44;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 15px;
     }
 
     .btn-secondary {
       background: #1e90ff;
     }
 
-    .btn-secondary:hover {
-      background: #156fd1;
-    }
-
     .link {
       display: block;
-      text-align: center;
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 12px;
-      text-decoration: none;
       color: #0a3d62;
-    }
-
-    .link:hover {
-      text-decoration: underline;
+      text-align: center;
+      text-decoration: none;
     }
   </style>
 </head>
+
 <body>
   <div class="card">
-    <div class="header">
-      <h2>Paldi Municipal Property Tax Portal</h2>
-      <p>Department of Urban Development, Ahmedabad</p>
-    </div>
+
+    <h2>Paldi Municipal Property Tax Portal</h2>
 
     <table>
-      <tr><td>Building ID</td><td id="bID">-</td></tr>
+      <tr><td>Building ID</td><td id="building">-</td></tr>
       <tr><td>Owner</td><td id="owner">-</td></tr>
-      <tr><td>Property Use</td><td id="useType">-</td></tr>
+      <tr><td>Address</td><td id="address">-</td></tr>
+      <tr><td>Email</td><td id="email">-</td></tr>
+      <tr><td>Phone</td><td id="phone">-</td></tr>
+      <tr><td>Property Use</td><td id="use">-</td></tr>
+      <tr><td>Carpet Area</td><td id="carpet">-</td></tr>
       <tr><td>Status</td><td id="status">-</td></tr>
-      <tr><td>Total Tax</td><td class="amount" id="totalTax">₹0</td></tr>
+
+      <tr>
+        <td>Total Tax</td>
+        <td class="amount" id="totalTax">₹0</td>
+      </tr>
     </table>
 
+    <!-- QR -->
     <div class="qr-section">
-      <img id="qrImage" src="" alt="Payment QR Code">
-      <div class="upi-id" id="upiId">upi://pay?pa=paldi.tax@gov&pn=Paldi%20Municipal%20Office</div>
+      <img id="qrImage" src="" alt="Payment QR">
+      <div class="upi-id" id="upiId">paldi.tax@gov</div>
     </div>
 
-    <a id="upiPay" class="btn" href="#">Pay via UPI</a>
-    <a id="cardPay" class="btn btn-secondary" href="#">Pay by Card</a>
-    <a id="downloadQR" class="link" href="#" download="PaldiTax_QR.png">Download QR Code</a>
+    <!-- Buttons -->
+    <a id="upiPay" class="btn">Pay via UPI</a>
+    <a id="cardPay" class="btn btn-secondary">Pay by Card</a>
+    <a id="downloadQR" class="link" download="PaldiTax_QR.png">Download QR Code</a>
     <a href="index.html" class="link">Back to Property Map</a>
   </div>
 
   <script>
-    // Get URL parameters
-    function getParam(key) {
-      return new URLSearchParams(window.location.search).get(key) || "N/A";
+    const params = new URLSearchParams(window.location.search);
+
+    function read(id) {
+      return params.get(id) || "N/A";
     }
 
-    const bID = getParam("building");
-    const owner = getParam("owner");
-    const use = getParam("use");
-    const total = getParam("totalTax");
-    const status = getParam("status");
+    // Fill details
+    document.getElementById("building").textContent = read("building");
+    document.getElementById("owner").textContent = read("owner");
+    document.getElementById("address").textContent = read("address");
+    document.getElementById("email").textContent = read("email");
+    document.getElementById("phone").textContent = read("phone");
+    document.getElementById("use").textContent = read("use");
+    document.getElementById("carpet").textContent = read("carpet");
+    document.getElementById("status").textContent = read("status");
 
-    document.getElementById("bID").textContent = bID;
-    document.getElementById("owner").textContent = owner;
-    document.getElementById("useType").textContent = use;
-    document.getElementById("status").textContent = status;
+    const total = read("totalTax");
     document.getElementById("totalTax").textContent = "₹" + total;
 
-    // Generate UPI payment link
+    // Build UPI payment
     const upiId = "paldi.tax@gov";
     const payeeName = "Paldi Municipal Office";
-    const amount = total || "0";
-    const note = "Property Tax " + bID;
+    const note = "Property Tax " + read("building");
 
-    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+    const upiLink =
+      `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${total}&cu=INR&tn=${encodeURIComponent(note)}`;
+
+    const qrUrl =
+      `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiLink)}`;
 
     document.getElementById("qrImage").src = qrUrl;
-    document.getElementById("upiPay").href = "#";
     document.getElementById("downloadQR").href = qrUrl;
 
-    // Simulate payment
-    function simulatePayment(method) {
-      // Simulate delay
+    function simulate(method) {
       document.body.innerHTML = `
-        <div style="text-align:center;font-family:'Segoe UI',sans-serif;">
+        <div style="text-align:center;margin-top:40px;font-family:'Segoe UI'">
           <h2 style="color:#0a3d62;">Processing ${method} Payment...</h2>
           <p>Please wait while we confirm your transaction.</p>
           <div style="margin-top:20px;">
@@ -201,12 +186,15 @@
         </div>
       `;
       setTimeout(() => {
-        window.location.href = `payment_success.html?building=${bID}&amount=${amount}&method=${method}`;
+        window.location.href =
+          "payment_success.html?building=" + read("building") +
+          "&amount=" + total +
+          "&method=" + method;
       }, 2000);
     }
 
-    document.getElementById("upiPay").onclick = () => simulatePayment("UPI");
-    document.getElementById("cardPay").onclick = () => simulatePayment("Card");
+    document.getElementById("upiPay").onclick = () => simulate("UPI");
+    document.getElementById("cardPay").onclick = () => simulate("Card");
   </script>
 </body>
 </html>

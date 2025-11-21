@@ -3,60 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <title>Payment Successful</title>
+
   <style>
     body {
       font-family: "Segoe UI", Arial, sans-serif;
       background: #f2f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
+
     .card {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      background: #fff;
+      width: 420px;
+      padding: 28px 30px;
+      border-radius: 12px;
       text-align: center;
-      width: 360px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
     }
+
+    .logo img {
+      width: 95px;
+      height: 95px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      opacity: 0.92;
+    }
+
     h2 {
       color: #0a3d62;
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 600;
     }
+
     p {
-      color: #333;
-      font-size: 14px;
+      color: #444;
+      font-size: 15px;
+      margin-top: 10px;
+      line-height: 1.5;
     }
+
     .btn {
       display: inline-block;
       background: #0a3d62;
-      color: white;
-      padding: 10px 20px;
+      color: #fff;
       text-decoration: none;
+      padding: 10px 20px;
       border-radius: 6px;
-      margin-top: 20px;
+      margin-top: 22px;
+      font-size: 14px;
+      transition: 0.2s;
     }
+
     .btn:hover {
       background: #062b44;
     }
+
+    .success-box {
+      background: #e5f8ea;
+      border: 1px solid #a8e4b3;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 6px;
+      color: #136b24;
+      font-weight: 600;
+      font-size: 14px;
+    }
   </style>
 </head>
+
 <body>
+
   <div class="card">
-    <h2>✅ Payment Complete</h2>
+
+    <div class="logo">
+      <img src="Amdavad_Municipal_Corporation.png" alt="AMC Logo">
+    </div>
+
+    <h2>Payment Successful</h2>
+
+    <div class="success-box">✔ Transaction Approved</div>
+
     <p id="details"></p>
+
     <a href="index.html" class="btn">Return to Property Map</a>
+
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const bID = params.get("building") || "-";
+
+    const building = params.get("building") || "-";
     const amt = params.get("amount") || "0";
     const method = params.get("method") || "UPI";
 
     document.getElementById("details").innerHTML =
-      `Payment of <strong>₹${amt}</strong> for Building ID <strong>${bID}</strong> was completed successfully via <strong>${method}</strong>.`;
+      `Your payment of <strong>₹${amt}</strong> for Building <strong>${building}</strong> has been successfully processed using <strong>${method}</strong>.`;
   </script>
+
 </body>
 </html>
